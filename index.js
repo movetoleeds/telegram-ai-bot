@@ -45,7 +45,7 @@ app.post("/webhook", async (req, res) => {
 
     const reply = await askAI(msg.text);
 
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    await fetch(`https://api.telegram.org/bot${8020718351:AAFGqyFc1D3JkjI_sWQFRo1RKxGn86TXtWA}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

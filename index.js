@@ -64,3 +64,31 @@ app.post("/webhook", async (req, res) => {
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
 });
+// ======= AI 呼叫 function（新增）=======
+
+async function askAI(userText) {
+  try {
+    const res = await fetch("https://sfo1.aihub.zeabur.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.AI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        messages: [
+          { role: "system", content: "你係一個用廣東話回覆嘅私人 AI 助手。" },
+          { role: "user", content: userText }
+        ]
+      })
+    });
+
+    const data = await res.json();
+    return data?.choices?.[0]?.message?.content
+      || "（AI 暫時無回覆 🙏）";
+
+  } catch (err) {
+    console.error("askAI error:", err);
+    return "（系統繁忙，遲啲再試 🙇‍♂️）";
+  }
+}

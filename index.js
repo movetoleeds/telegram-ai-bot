@@ -15,7 +15,7 @@ app.get("/", (_, res) => {
 
 async function askAI(userText) {
   try {
-    const res = await fetch("https://aihub.zeabur.com/v1/chat/completions", {
+    const res = await fetch("https://sfo1.aihub.zeabur.ai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${AI_KEY}`,

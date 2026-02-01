@@ -8,7 +8,11 @@ const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const AI_KEY = process.env.AI_API_KEY;
 const PORT = process.env.PORT || 8080;
 
-/* === AI 問答 === */
+// health check（Zeabur 必須）
+app.get("/", (_, res) => {
+  res.send("OK");
+});
+
 async function askAI(userText) {
   try {
     const res = await fetch("https://aihub.zeabur.com/v1/chat/completions", {
@@ -30,15 +34,14 @@ async function askAI(userText) {
     return data.choices?.[0]?.message?.content || "（我而家答唔到，試下再問）";
   } catch (err) {
     console.error("AI error:", err);
-    return "（系統暫時有問題，遲啲再試 🙏）";
+    return "（系統暫時有啲忙，遲啲再試 🙏）";
   }
 }
 
-/* === Telegram Webhook === */
 app.post("/webhook", async (req, res) => {
   try {
     const msg = req.body?.message;
-    if (!msg?.text) return res.send("ok");
+    if (!msg?.text) return res.sendStatus(200);
 
     const reply = await askAI(msg.text);
 
@@ -51,19 +54,13 @@ app.post("/webhook", async (req, res) => {
       })
     });
 
-    res.send("ok");
+    res.sendStatus(200);
   } catch (err) {
     console.error("Webhook error:", err);
-    res.send("ok"); // 一定要回 ok，唔好比 Telegram retry
+    res.sendStatus(200);
   }
 });
 
-/* === 健康檢查（比 Zeabur 用） === */
-app.get("/", (req, res) => {
-  res.send("Telegram bot is running");
-});
-
-/* === 啟動 Server === */
 app.listen(PORT, () => {
-  console.log("Server listening on port", PORT);
+  console.log("Server running on port", PORT);
 });

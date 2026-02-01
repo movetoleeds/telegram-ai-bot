@@ -28,7 +28,7 @@ async function sendMessage(chatId, text) {
 }
 
 async function askAI(userText) {
-  const res = await fetch("https://aihub.zeabur.com/v1/chat/completions", {
+  const res = await fetch("https://sfo1.aihub.zeabur.ai/v1/chat/completions", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${AI_KEY}`,
